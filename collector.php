@@ -9,6 +9,7 @@ class Collector {
     var $access_token = null;
     var $default_client_id = "openapi";
     var $allow_error = false;
+    var $outputFormat = null;
     var $headers = array();
 
     public function set_accesstoken_directly($access_token, $url = null) {
@@ -65,7 +66,9 @@ class Collector {
         if ($this->allow_error && array_key_exists('error', $back))
             return $back;
 
-        if (is_array($sideload))
+        if ($this->outputFormat == "raw")
+            return $back;
+        else if (is_array($sideload))
             return $this->populate_sideload($back, $form, $sideload);
         else
             return $back[$form];
@@ -75,7 +78,12 @@ class Collector {
         $temp = array();
         foreach ($sideload_arr as $field => $subfields) {
             foreach ($subfields as $subfield) {
-                $temp[] = $field.".".$subfield;
+                if (is_array($subfields)) {
+                    foreach ($subfields as $subfield) {
+                        $temp[] = $field . "." . $subfield;
+                    }
+                } else
+                    $temp[] = $subfields;
             }
         }
         return array("sideload" => $temp);
@@ -216,7 +224,7 @@ class Collector {
     {
         $ret = array();
         foreach($headers as $k => $v) {
-            $ret[] = $k.": ".$v;
+            if ($v !== null) $ret[] = $k.": ".$v;
         }
         return $ret;
     }
