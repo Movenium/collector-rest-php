@@ -40,6 +40,10 @@ class Collector {
         $this->headers[$header] = $value;
     }
 
+    public function clear_headers() {
+        $this->headers = array();
+    }
+
     /**
      *
      * @param type $form
@@ -148,7 +152,9 @@ class Collector {
 
     public function getMe() {
         $this->allow_error = true;
-        return $this->request("get", "me");
+        $ret = $this->request("get", "me");
+        $this->allow_error = false;
+        return $ret;
     }
 
     public function update() {
@@ -160,6 +166,8 @@ class Collector {
 
         $url = $this->apiurl.$path;
         $ch = \curl_init();
+
+        $method = strtolower($method);
 
         curl_setopt($ch, CURLOPT_URL,$url);
 
@@ -192,7 +200,7 @@ class Collector {
 
         if (!$this->allow_error && array_search($httpcode, $this->ok_http_codes) === false) {
             $path_start = explode("?", $path);
-            throw new \Exception("Collector API returned ".$server_output." ($httpcode) for $method /".$path_start[0]);
+            throw new \Exception("Collector API returned ".$server_output." ($httpcode) for $method $url");// ".json_encode($content)." H: ".json_encode($headers));
         }
 
         try {
