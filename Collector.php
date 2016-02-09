@@ -81,14 +81,13 @@ class Collector {
     private function create_sideload_get($sideload_arr) {
         $temp = array();
         foreach ($sideload_arr as $field => $subfields) {
-            foreach ($subfields as $subfield) {
-                if (is_array($subfields)) {
-                    foreach ($subfields as $subfield) {
-                        $temp[] = $field . "." . $subfield;
-                    }
-                } else
-                    $temp[] = $subfields;
+            if (is_array($subfields)) {
+                foreach ($subfields as $subfield) {
+                    $temp[] = $field . "." . $subfield;
+                }
             }
+            else
+                $temp[] = $subfields;
         }
         return array("sideload" => $temp);
     }
