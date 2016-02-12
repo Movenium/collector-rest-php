@@ -12,6 +12,8 @@ class Collector {
     var $outputFormat = null;
     var $headers = array();
 
+    var $debug_mode = false;
+
     public function set_accesstoken_directly($access_token, $url = null) {
         if ($url) $this->apiurl = $url;
         $this->access_token = $access_token;
@@ -200,6 +202,10 @@ class Collector {
         if (!$this->allow_error && array_search($httpcode, $this->ok_http_codes) === false) {
             $path_start = explode("?", $path);
             throw new \Exception("Collector API returned ".$server_output." ($httpcode) for $method $url");// ".json_encode($content)." H: ".json_encode($headers));
+        }
+
+        if ($this->debug_mode) {
+            print "Collector API returned ".$server_output." ($httpcode) for $method $url ".json_encode($content)." H: ".json_encode($headers);
         }
 
         try {
