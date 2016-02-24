@@ -151,9 +151,9 @@ class Collector {
         return $this->request("get", "forms");
     }
 
-    public function getMe() {
+    public function getMe($linkings = false) {
         $this->allow_error = true;
-        $ret = $this->request("get", "me");
+        $ret = $this->request("get", "me".($linkings ? "?linkings": ""));
         $this->allow_error = false;
         return $ret;
     }
@@ -199,13 +199,13 @@ class Collector {
 
         curl_close ($ch);
 
+        if ($this->debug_mode) {
+            print "Collector API returned ".$server_output." ($httpcode) for $method $url ".json_encode($content)." H: ".json_encode($headers);
+        }
+
         if (!$this->allow_error && array_search($httpcode, $this->ok_http_codes) === false) {
             $path_start = explode("?", $path);
             throw new \Exception("Collector API returned ".$server_output." ($httpcode) for $method $url");// ".json_encode($content)." H: ".json_encode($headers));
-        }
-
-        if ($this->debug_mode) {
-            print "Collector API returned ".$server_output." ($httpcode) for $method $url ".json_encode($content)." H: ".json_encode($headers);
         }
 
         try {
