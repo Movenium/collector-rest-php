@@ -76,8 +76,36 @@ class Collector {
             return $back;
         else if (is_array($sideload))
             return $this->populate_sideload($back, $form, $sideload);
+        else if ($sideload)
+            return $this->auto_populate_sideload($back, $form);
         else
             return $back[$form];
+    }
+
+    private function auto_populate_sideload($data, $form) {
+        $rows = $data[$form];
+        $data_by_ids = array();
+        if (count($rows) < 1) return $rows;
+        foreach ($data as $form_name => $subrows) {
+            if ($form_name == $form) continue;
+            if (!is_array($subrows)) continue;
+
+            foreach ($subrows as $values) {
+                $rowid = $values['id'];
+                unset($values['id']);
+                $data_by_ids[$rowid] = implode(" ", $values);
+            }
+        }
+
+        foreach ($rows as $key => $row) {
+            foreach ($row as $k => $v) {
+                if (!is_integer($v)) continue;
+                if (!array_key_exists($v, $data_by_ids)) continue;
+
+                $rows[$key][$k] = $data_by_ids[$v];
+            }
+        }
+        return $rows;
     }
 
     private function create_sideload_get($sideload_arr) {
@@ -147,8 +175,8 @@ class Collector {
         return $back;
     }
 
-    public function forms($form) {
-        return $this->request("get", "forms");
+    public function forms($form = null) {
+        return $this->request("get", "forms".($form ? "/".$form : ""));
     }
 
     public function getMe($linkings = false) {
