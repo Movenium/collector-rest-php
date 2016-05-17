@@ -148,7 +148,10 @@ class Collector {
 
     public function insertRow($form, $values, $params = array()) {
         $values = array($this->camelCase($form) => $values);
-        if (array_key_exists("validation", $values) && ['validation'] == "off") $values['validation'] = "off";
+        if (array_key_exists("validation", $values[$this->camelCase($form)]) && $values[$this->camelCase($form)]['validation'] == "off") {
+            unset($values[$this->camelCase($form)]['validation']);
+            $values['validation'] = "off";
+        }
         $back = $this->request("post", $this->pluralize_and_camelCase($form), json_encode($values));
         return $back;
     }
