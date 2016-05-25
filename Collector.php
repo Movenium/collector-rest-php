@@ -146,6 +146,14 @@ class Collector {
         return $rows;
     }
 
+    public function findRow($form, $id) {
+        $back = $this->request("get", $this->pluralize_and_camelCase($form)."/".$id, "");
+        if ($this->outputFormat == "raw")
+            return $back;
+        else
+            return $back[$form];
+    }
+
     public function insertRow($form, $values, $params = array()) {
         $values = array($this->camelCase($form) => $values);
         if (array_key_exists("validation", $values[$this->camelCase($form)]) && $values[$this->camelCase($form)]['validation'] == "off") {
