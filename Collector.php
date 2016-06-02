@@ -5,7 +5,7 @@ namespace App\Classes\collector;
 class Collector {
 
     var $ok_http_codes = array(200,201,204);
-    var $apiurl = "https://api.movenium.com/beta.3/";
+    var $apiurl = "https://api.movenium.com/1.1/";
     var $access_token = null;
     var $default_client_id = "openapi";
     var $allow_error = false;
