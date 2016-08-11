@@ -257,6 +257,69 @@ class Collector {
         return $json === null ? $server_output : (array) $json;
     }
 
+    public function union($dataset1, $dataset1_formname, $dataset2, $dataset2_formname, $destination_formname, $distinct = array()) {
+        $sideloadCache = array();
+        $temp = array();
+        $distinctCache = array();
+
+        $count = 0;
+
+        foreach ($dataset1 as $key => $data) {
+            if ($key == "count") continue;
+            if ($key == $dataset1_formname) {
+                $added_count = $this->unionAddToTemp($data,$destination_formname, $temp, $distinct, $distinctCache);
+                $count += $added_count;
+                continue;
+            }
+
+            $this->unionAddToSideloads($key, $data, $temp, $sideloadCache);
+        }
+
+        foreach ($dataset2 as $key => $data) {
+            if ($key == "count") continue;
+            if ($key == $dataset2_formname) {
+                $added_count = $this->unionAddToTemp($data,$destination_formname, $temp, $distinct, $distinctCache);
+                $count += $added_count;
+                continue;
+            }
+
+            $this->unionAddToSideloads($key, $data, $temp, $sideloadCache);
+        }
+
+        $temp['count'] = $count;
+
+        return $temp;
+    }
+
+    private function unionAddToTemp(&$data,$destination_formname, &$temp, $distinct, &$distinctCache) {
+        $count = 0;
+        foreach ($data as $row) {
+            // use distinct filter
+            if (count($distinct) > 0) {
+                $distinct_key = "";
+                foreach ($distinct as $d) $distinct_key .= '['.$row[$d].']';
+                if (array_search($distinct_key, $distinctCache) !== false) continue;
+                $distinctCache[] = $distinct_key;
+            }
+
+            $temp[$destination_formname][] = $row;
+            $count++;
+        }
+
+        return $count;
+    }
+
+    private function unionAddToSideloads($key, &$data, &$temp, &$sideloadCache) {
+
+        if (!array_key_exists($key, $sideloadCache)) $sideloadCache[$key] = array();
+
+        foreach ($data as $row) {
+            if (array_search($row['id'], $sideloadCache[$key]) !== false) continue;
+            $temp[$key][] = $row;
+            $sideloadCache[$key][] = $row['id'];
+        }
+    }
+
     public function camelCase($form) {
         $parts = explode("_", $form);
         if (count($parts) < 2) return $form;
