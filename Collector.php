@@ -82,7 +82,7 @@ class Collector {
             return $back[$form];
     }
 
-    private function auto_populate_sideload($data, $form) {
+    public function auto_populate_sideload($data, $form) {
         $rows = $data[$form];
         $data_by_ids = array();
         if (count($rows) < 1) return $rows;
