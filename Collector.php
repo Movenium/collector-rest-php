@@ -11,6 +11,7 @@ class Collector {
     var $allow_error = false;
     var $outputFormat = null;
     var $headers = array();
+    var $last_count = 0;
 
     var $debug_mode = false;
 
@@ -71,7 +72,9 @@ class Collector {
 
         if ($this->allow_error && array_key_exists('error', $back))
             return $back;
-
+        if(array_key_exists("count", $back)) {
+            $this->last_count = $back["count"];
+        }
         if ($this->outputFormat == "raw")
             return $back;
         else if (is_array($sideload))
