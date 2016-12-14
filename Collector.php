@@ -227,6 +227,8 @@ class Collector {
         if ($this->access_token)
             $this->setHeader("Authorization", "Bearer ".$this->access_token);
 
+        $this->setHeader("Content-Type", "application/json");
+
         $headers = $this->formatHeaders($this->headers);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
