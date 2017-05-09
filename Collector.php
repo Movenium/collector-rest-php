@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file is for supporting old fashion git submodules. Composer version can be found from src/movenium/collector.php
+ */
+
 namespace App\Classes\collector;
 
 class Collector {
