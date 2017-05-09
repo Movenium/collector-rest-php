@@ -10,6 +10,8 @@ composer require movenium/collector-rest-php
 Login to capi
 
 ```
+use movenium\collector;
+
 $collector = new collector();
 $collector->login("username", "password");
 ```
