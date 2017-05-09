@@ -1,0 +1,14 @@
+{
+    "name": "movenium/collector-rest-php",
+    "autoload": {
+        "psr-0" : {
+            "collector\\Collector" : "src"
+        }
+    },
+    "repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/Movenium/collector-rest-php"
+    }
+],
+}
