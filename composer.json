@@ -1,5 +1,6 @@
 {
     "name": "movenium/collector-rest-php",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-0" : {
             "collector\\Collector" : "src"
