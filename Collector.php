@@ -106,7 +106,7 @@ class Collector {
 
         foreach ($rows as $key => $row) {
             foreach ($row as $k => $v) {
-                if (!is_integer($v)) continue;
+                if (!is_integer($v) && !is_string($v)) continue;
                 if (!array_key_exists($v, $data_by_ids)) continue;
 
                 $rows[$key][$k] = $data_by_ids[$v];
