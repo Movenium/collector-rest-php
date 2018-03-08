@@ -332,6 +332,8 @@ class Collector {
     public function camelCase($form) {
         $parts = explode("_", $form);
         if (count($parts) < 2) return $form;
+        // support for three-part-forms
+        if (count($parts) == 3) return $parts[0].ucfirst($parts[1]).ucfirst($parts[2]);
         return $parts[0].ucfirst($parts[1]);
     }
 
