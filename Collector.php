@@ -182,14 +182,21 @@ class Collector {
     }
 
     public function updateRow($form, $id, $values) {
-
         if (is_array($id)) {
             $values['id'] = $id;
-            $back = $this->request("put", $this->pluralize_and_camelCase($form), json_encode(array($this->camelCase($form) => $values)));
+            $url = $this->pluralize_and_camelCase($form);
         }
         else {
-            $back = $this->request("put", $this->pluralize_and_camelCase($form)."/".$id, json_encode(array($this->camelCase($form) => $values)));
+            $url = $this->pluralize_and_camelCase($form)."/".$id;
         }
+
+        if (array_key_exists("validation", $values) && $values['validation'] == "off") {
+            unset($values['validation']);
+            $url .= "?validation=off";
+        }
+
+        $back = $this->request("put", $url, json_encode(array($this->camelCase($form) => $values)));
+
         return $back;
     }
 
