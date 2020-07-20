@@ -74,6 +74,8 @@ class Collector {
 
         $back = $this->request("get", $path, $params);
 
+        if (!is_array($back)) throw new \Exception("CAPI returned: '".$back."'");
+
         if ($this->allow_error && array_key_exists('error', $back))
             return $back;
         if(array_key_exists("count", $back)) {
