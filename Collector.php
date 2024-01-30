@@ -90,7 +90,39 @@ class Collector {
         else
             return $back[$form];
     }
+    /**
+     *
+     * @param type $form
+     * @param type $params
+     * @param array $sideload ie. {project: [name,number]}
+     * @return type
+     */
+    public function postFindAll($form, $params = array()) {
+        $form = $this->pluralize($form);
 
+        $sideload = array_key_exists('sideload', $params) ? $params['sideload'] : null;
+
+        if (is_array($sideload)) {
+            unset($params['sideload']);
+            $params = array_merge($this->create_sideload_get($sideload), $params);
+        }
+        
+        $back = $this->request("post", "service/postFindAll?form=".$this->camelCase($form), http_build_query($params));
+
+        if ($this->allow_error && array_key_exists('error', $back))
+            return $back;
+        if(array_key_exists("count", $back)) {
+            $this->last_count = $back["count"];
+        }
+        if ($this->outputFormat == "raw")
+            return $back;
+        else if (is_array($sideload))
+            return $this->populate_sideload($back, $form, $sideload);
+        else if ($sideload)
+            return $this->auto_populate_sideload($back, $form);
+        else
+            return $back[$form];
+    }
     public function auto_populate_sideload($data, $form) {
         $rows = $data[$form];
         $data_by_ids = array();
