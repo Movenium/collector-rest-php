@@ -1,8 +1,8 @@
 <?php
 
-namespace movenium;
+namespace Movenium;
 
-class collector {
+class Collector {
 
     var $ok_http_codes = array(200,201,204);
     var $apiurl = "https://api.movenium.com/1.1/";
