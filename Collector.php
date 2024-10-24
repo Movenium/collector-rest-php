@@ -88,7 +88,7 @@ class Collector {
         else if ($sideload)
             return $this->auto_populate_sideload($back, $form);
         else
-            return $back[$form];
+            return $back[$this->camelCase($form)];
     }
     /**
      *
