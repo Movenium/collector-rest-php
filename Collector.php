@@ -371,7 +371,14 @@ class Collector {
     }
 
     public function camelCase($form) {
+        $parts = [];
+        if(strpos($form, "_") !== false) 
         $parts = explode("_", $form);
+        if (strpos($form, "-") !== false)
+        $parts = explode("-", $form);
+        // If no underscores or dashes, return the form as is
+        if (strpos($form, "-") === false && strpos($form, "_") === false)
+        return $form;
         if (count($parts) < 2) return $form;
         // support for three-part-forms
         if (count($parts) == 3) return $parts[0].ucfirst($parts[1]).ucfirst($parts[2]);
