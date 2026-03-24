@@ -242,6 +242,8 @@ class collector {
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
         $server_output = curl_exec ($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
