@@ -14,6 +14,7 @@ class Collector {
     var $default_client_id = "openapi";
     var $allow_error = false;
     var $outputFormat = null;
+    var $timeout = 60;
     var $headers = array();
     var $last_count = 0;
 
@@ -278,7 +279,7 @@ class Collector {
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
         $server_output = curl_exec ($ch);
