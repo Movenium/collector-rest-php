@@ -69,7 +69,9 @@ class Collector {
             $params = array_merge($this->create_sideload_get($sideload), $params);
         }
 
+        // Collector returns the rows under the requested (camelCase) name, ie. siteSafetyObservations
         $path = $this->camelCase($form);
+        $result_key = $path;
         if (count($params) > 0)
             $path .= '?'.http_build_query($params);
 
@@ -85,11 +87,11 @@ class Collector {
         if ($this->outputFormat == "raw")
             return $back;
         else if (is_array($sideload))
-            return $this->populate_sideload($back, $form, $sideload);
+            return $this->populate_sideload($back, $result_key, $sideload);
         else if ($sideload)
-            return $this->auto_populate_sideload($back, $form);
+            return $this->auto_populate_sideload($back, $result_key);
         else
-            return $back[$this->camelCase($form)];
+            return $back[$result_key];
     }
     /**
      *
@@ -108,7 +110,9 @@ class Collector {
             $params = array_merge($this->create_sideload_get($sideload), $params);
         }
         
-        $back = $this->request("post", "service/postFindAll?form=".$this->camelCase($form), http_build_query($params));
+        // Collector returns the rows under the requested (camelCase) name, ie. siteSafetyObservations
+        $result_key = $this->camelCase($form);
+        $back = $this->request("post", "service/postFindAll?form=".$result_key, http_build_query($params));
 
         if ($this->allow_error && array_key_exists('error', $back))
             return $back;
@@ -118,11 +122,11 @@ class Collector {
         if ($this->outputFormat == "raw")
             return $back;
         else if (is_array($sideload))
-            return $this->populate_sideload($back, $form, $sideload);
+            return $this->populate_sideload($back, $result_key, $sideload);
         else if ($sideload)
-            return $this->auto_populate_sideload($back, $form);
+            return $this->auto_populate_sideload($back, $result_key);
         else
-            return $back[$form];
+            return $back[$result_key];
     }
     public function auto_populate_sideload($data, $form) {
         $rows = $data[$form];
