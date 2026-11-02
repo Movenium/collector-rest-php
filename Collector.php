@@ -300,12 +300,7 @@ class Collector {
             throw new \Exception("Collector API returned ".$server_output." ($httpcode) for $method $url");// ".json_encode($content)." H: ".json_encode($headers));
         }
 
-        try {
-            $json = json_decode($server_output, true);
-        }
-        catch (Exception $e) {
-            print $e->getMessage();
-        }
+        $json = json_decode($server_output, true);
 
         return $json === null ? $server_output : (array) $json;
     }
